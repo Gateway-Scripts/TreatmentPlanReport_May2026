@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="TreatmentPlanReport.Views.PatientShiftView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TreatmentPlanReport.Views"
+             xmlns:converters="clr-namespace:TreatmentPlanReport.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+        <UserControl.Resources>
+            <ResourceDictionary>
+                <converters:PatientShiftConverter x:Key="localShiftConverter"/>
+            </ResourceDictionary>
+        </UserControl.Resources>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Patient Shifts" Margin="0,20,5,5" Grid.ColumnSpan="2" FontWeight="Bold"/>
+            <StackPanel Grid.Row="1">
+                <TextBlock Margin="5" Text="DICOM Coordinates [cm]" FontWeight="Bold"/>
+                <TextBlock Margin="5">
+                <Run Text="DICOM Origin: " FontWeight="Bold"/>
+                <Run Text="{Binding DICOMOrigin}"/>
+                </TextBlock>
+                <TextBlock Margin="5">
+                <Run Text="User Origin: " FontWeight="Bold"/>
+                <Run Text="{Binding UserOrigin}"/>
+                </TextBlock>
+                <TextBlock Margin="5">
+                <Run Text="Isocenter: " FontWeight="Bold"/>
+                <Run Text="{Binding Isocenter}"/>
+                </TextBlock>
+                <TextBlock Margin="5">
+                <Run Text="Shifts Reported From: " FontWeight="Bold"/>
+                <Run Text="{Binding ShiftOrigin}"/>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Text="{Binding XShift.ShiftText}"/>
+                <Image Width="100" Height="100" Source="{Binding XShift, Converter={StaticResource localShiftConverter}}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Grid.Row="1">
+                <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Text="{Binding YShift.ShiftText}"/>
+                <Image Width="100" Height="100" Source="{Binding YShift, Converter={StaticResource localShiftConverter}}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="3" Grid.Row="1">
+                <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Text="{Binding ZShift.ShiftText}"/>
+                <Image Width="100" Height="100" Source="{Binding ZShift, Converter={StaticResource localShiftConverter}}"/>
+            </StackPanel>
+        </Grid>
+    
+</UserControl>

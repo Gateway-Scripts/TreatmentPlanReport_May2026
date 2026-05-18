@@ -20,10 +20,21 @@ namespace TreatmentPlanReport.ViewModels
             PatientId = patient.Id;
             LastName = patient.LastName;
             FirstName = patient.FirstName;
-            //ternary operator check for null DateOfBirth
-            DateOfBirth = patient.DateOfBirth.HasValue ? patient.DateOfBirth.Value.ToShortDateString() : "No DOB";
+            DateOfBirth = GetDOB(patient.DateOfBirth);
             Hospital = patient.Hospital.Id;
             PrimaryOncologist = patient.PrimaryOncologistName;
+        }
+
+        public string GetDOB(DateTime? dateOfBirth)
+        {
+            //ternary operator check for null DateOfBirth
+            return dateOfBirth.HasValue ? dateOfBirth.Value.ToShortDateString() : "No DOB";
+        }
+
+        //parmeterless constructor for unit testing.
+        public PatientViewModel()
+        {
+            
         }
     }
 }

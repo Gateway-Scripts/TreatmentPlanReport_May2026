@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800">
     <Grid>
-        <TextBlock Text="{Binding PlanId}" FontSize="18" FontWeight="Bold"/>
+        <StackPanel Margin="5">
+            <TextBlock Text="Patient Info" FontSize="14" FontWeight="Bold"/>
+            <local:PatientView DataContext="{Binding LocalPatientViewModel}"/>
+        </StackPanel>
     </Grid>
 </Window>

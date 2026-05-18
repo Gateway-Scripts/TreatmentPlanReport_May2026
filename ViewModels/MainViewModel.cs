@@ -10,9 +10,11 @@ namespace TreatmentPlanReport.ViewModels
     public class MainViewModel
     {
         public string PlanId { get; set; }
-        public MainViewModel(PlanSetup plan)
+        public PatientViewModel LocalPatientViewModel { get; set; }
+        public MainViewModel(Patient patient, PlanSetup plan)
         {
             PlanId = plan.Id;
+            LocalPatientViewModel = new PatientViewModel(patient);
         }
     }
 }

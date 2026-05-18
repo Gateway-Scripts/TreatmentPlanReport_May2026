@@ -32,7 +32,7 @@ namespace TreatmentPlanReport
                     esapi.Course course = patient.Courses.FirstOrDefault(c => c.Id == "Demo");
                     esapi.PlanSetup plan = course.PlanSetups.FirstOrDefault(p => p.Id == "IMRT Calc");
                     var mainView = new MainView();
-                    var mainViewModel = new MainViewModel(plan);
+                    var mainViewModel = new MainViewModel(patient,plan);
                     //tell the mainView to evaluate binding expressions using properties of the MainViewModel class.
                     mainView.DataContext = mainViewModel;
                     //show the UI.

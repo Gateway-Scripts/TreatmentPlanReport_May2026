@@ -26,6 +26,9 @@
                     <local:FieldSummaryView DataContext="{Binding LocalFieldViewModel}"/>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="DVH">
+                <local:DVHView DataContext="{Binding LocalDVHViewModel}"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

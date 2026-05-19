@@ -17,6 +17,7 @@ namespace TreatmentPlanReport.ViewModels
         public PatientShiftViewModel LocalPatientShiftViewModel { get; set; }
         public FieldViewModel LocalFieldViewModel { get; set; }
         public DVHViewModel LocalDVHViewModel { get; set; }
+        public IsoOrthogonalViewModel LocalOrthogonalImageViewModel { get; set; }
         public MainViewModel(Patient patient, PlanSetup plan)
         {
             LocalPatientViewModel = new PatientViewModel(patient);
@@ -27,6 +28,7 @@ namespace TreatmentPlanReport.ViewModels
             //generate event helper.
             EventHelper eventHelper = new EventHelper();
             LocalDVHViewModel = new DVHViewModel(plan, eventHelper);
+            LocalOrthogonalImageViewModel = new IsoOrthogonalViewModel(patient, plan.Course, plan);
         }
     }
 }

@@ -29,6 +29,9 @@
             <TabItem Header="DVH">
                 <local:DVHView DataContext="{Binding LocalDVHViewModel}"/>
             </TabItem>
+            <TabItem Header="Iso Views">
+                <local:OrthogonalImageView DataContext="{Binding LocalOrthogonalImageViewModel}"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

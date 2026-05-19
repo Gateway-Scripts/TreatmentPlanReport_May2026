@@ -7,7 +7,15 @@
         mc:Ignorable="d"
         Title="Treatment Plan Report" Height="850" Width="1200">
     <Grid>
-        <TabControl Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Button Content="Generate Report" Margin="10" Command="{Binding PrintReportCommand}"/>
+            <Button Content="Post to ARIA" Margin="10" Command="{Binding PostARIACommand}"/>
+        </StackPanel>
+        <TabControl Margin="5" Grid.Row="1">
             <TabItem Header="Report">
                 <StackPanel Margin="5">
                     <TextBlock Text="Patient Info" FontSize="14" FontWeight="Bold"/>

@@ -814,7 +814,7 @@ namespace TreatmentPlanReport.Helpers
             try
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                string resourcePrefix = "OneClickPrint.Resources.cosmo.";
+                string resourcePrefix = "TreatmentPlanReport.resources";
                 string imageOrientation = String.Empty;
                 bool flipImage = false;
 

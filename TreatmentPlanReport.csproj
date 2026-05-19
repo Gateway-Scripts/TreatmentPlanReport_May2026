@@ -268,7 +268,7 @@
     <EmbeddedResource Include="Resources\Cosmonaut_HFP_Transverse.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Cosmonaut_HFS_Tranverse.png">
+    <EmbeddedResource Include="Resources\Cosmonaut_HFS_Transverse.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Cosmonaut_Sagittal_Left.png">

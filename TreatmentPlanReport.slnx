@@ -3,7 +3,6 @@
     <Build Solution="Debug|*" Project="false" />
   </Project>
   <Project Path="TreatmentPlanReport.csproj" Id="38206357-6d94-44a4-8b57-eddb9ff9e798">
-    <Platform Solution="Debug|*" Project="x64" />
     <Build Solution="Debug|*" Project="false" />
   </Project>
 </Solution>

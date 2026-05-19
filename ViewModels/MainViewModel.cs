@@ -1,4 +1,5 @@
-﻿using OxyPlot.Wpf;
+﻿using Microsoft.Win32;
+using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,9 @@ namespace TreatmentPlanReport.ViewModels
 {
     public class MainViewModel
     {
+        private Patient _patient;
+        private PlanSetup _plan;
+
         public PatientViewModel LocalPatientViewModel { get; set; }
         public PlanViewModel LocalPlanViewModel { get; set; }
         public RxViewModel LocalRxViewModel { get; set; }
@@ -23,8 +27,11 @@ namespace TreatmentPlanReport.ViewModels
         public DVHViewModel LocalDVHViewModel { get; set; }
         public IsoOrthogonalViewModel LocalOrthogonalImageViewModel { get; set; }
         public RelayCommand PrintReportCommand { get; private set; }
+        public RelayCommand PostARIACommand { get; private set; }
         public MainViewModel(Patient patient, PlanSetup plan)
         {
+            _patient = patient;
+            _plan = plan;
             LocalPatientViewModel = new PatientViewModel(patient);
             LocalPlanViewModel = new PlanViewModel(plan);
             LocalRxViewModel = new RxViewModel(plan);
@@ -35,6 +42,21 @@ namespace TreatmentPlanReport.ViewModels
             LocalDVHViewModel = new DVHViewModel(plan, eventHelper);
             LocalOrthogonalImageViewModel = new IsoOrthogonalViewModel(patient, plan.Course, plan);
             PrintReportCommand = new RelayCommand(OnPrint);
+            PostARIACommand = new RelayCommand(OnPostARIA);
+        }
+
+        private void OnPostARIA(object obj)
+        {
+            //go get a document and put into ARIA.
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "PDF Files (*.pdf)|*.pdf|All Files (*.*)|*.*";
+            ofd.Title = "Select PDF to upload to ARIA";
+            if(ofd.ShowDialog() == true)
+            {
+                string fileName = ofd.FileName;
+                DocumentServices.GenerateClient();
+                DocumentServices.InsertDocument(fileName, _patient.Id, "Treatment Plan Report", _patient.Hospital.Id);
+            }
         }
 
         private void OnPrint(object obj)

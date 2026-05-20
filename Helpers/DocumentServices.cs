@@ -15,19 +15,24 @@ namespace TreatmentPlanReport.Helpers
     {
         //Configure ARIA API URLs
         public static string tokenUrl = "https://master-ae.vic.com:44333/tokenservice/connect/token";
-        public static string baseUrl = "https://master-ae:55370/fhir/r4";
+        public static string baseUrl = "https://master-ae.vic.com:55370/fhir/r4"; // Changed to match tokenUrl domain
         //TODO Replace here with your own client id and secret
         //===================================
         public static string clientId = "c8f6cdaf-b492-4958-a75a-9a3730c05e01";
         public static string clientSecret = "GatewayScripts_Varian!2026";
         public static string scopes = "system/ActivityDefinition.rs system/AllergyIntolerance.cruds system/AllergyIntolerance.rs system/Appointment.cruds system/Appointment.rs system/AuditEvent.c system/AuditEvent.cruds system/BodyStructure.rs system/CarePlan.rs system/CareTeam.cruds system/CareTeam.rs system/ChargeItem.cruds system/ChargeItem.rs system/Condition.cruds system/Condition.rs system/Device.rs system/DocumentReference.cruds system/DocumentReference.rs system/Group.rs system/HealthcareService.rs system/Location.rs system/Observation.rs system/Organization.rs system/Patient.cruds system/Patient.rs system/Practitioner.cruds system/Practitioner.rs system/Procedure.rs system/ServiceRequest.rs system/Task.cruds system/Task.rs system/ValueSet.rs user/ActivityDefinition.rs user/AllergyIntolerance.cruds user/AllergyIntolerance.rs user/Appointment.cruds user/Appointment.rs user/AuditEvent.c user/AuditEvent.cruds user/BodyStructure.rs user/CarePlan.rs user/CareTeam.cruds user/CareTeam.rs user/ChargeItem.cruds user/ChargeItem.rs user/Condition.cruds user/Condition.rs user/Device.rs user/DocumentReference.cruds user/DocumentReference.rs user/Group.rs user/HealthcareService.rs user/Location.rs user/Observation.rs user/Organization.rs user/Patient.cruds user/Patient.rs user/Practitioner.cruds user/Practitioner.rs user/Procedure.rs user/ServiceRequest.rs user/Task.cruds user/Task.rs user/ValueSet.rs";
         public static HttpClient client;
-        public static string token; 
+        //public static string token; 
         /// <summary>
         /// Connects tot he ARIA API and generates a token.
         /// </summary>
         public static void GenerateClient()
         {
+            Console.WriteLine($"=== GenerateClient Starting ===");
+            Console.WriteLine($"Token URL: {tokenUrl}");
+            Console.WriteLine($"Base URL: {baseUrl}");
+            Console.WriteLine($"Client ID: {clientId}");
+
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
@@ -41,31 +46,63 @@ namespace TreatmentPlanReport.Helpers
             credentials.Add("scope", scopes);
 
             Console.WriteLine("Requesting bearer token");
-            var response = client.PostAsync(tokenUrl, new FormUrlEncodedContent(credentials));
-            var result = response.Result.Content.ReadAsStringAsync();
-            var tokenJson = JObject.Parse(result.Result);
-            token = tokenJson["access_token"].ToString();
-            //Console.WriteLine($"Bearer token acquired: {token}");
-            //now that we have the bearer token, this is the authentication mechanism.
-            //set the authorization of the client.
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            client.DefaultRequestHeaders.Add("Accept", "application/fhir+json");
+            try
+            {
+                var response = client.PostAsync(tokenUrl, new FormUrlEncodedContent(credentials));
+                var result = response.Result.Content.ReadAsStringAsync();
+                Console.WriteLine($"Token response status: {response.Result.StatusCode}");
+
+                var tokenJson = JObject.Parse(result.Result);
+                var token = tokenJson["access_token"].ToString();
+                Console.WriteLine($"Bearer token acquired successfully (length: {token.Length})");
+
+                //now that we have the bearer token, this is the authentication mechanism.
+                //set the authorization of the client.
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                client.DefaultRequestHeaders.Add("Accept", "application/fhir+json");
+                Console.WriteLine("=== GenerateClient Complete ===");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR in GenerateClient: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                throw;
+            }
         }
 
         public static bool InsertDocument(string filePath, string patientId, string docType,
             string hospitalId)
         {
+            Console.WriteLine($"=== Starting InsertDocument ===");
+            Console.WriteLine($"File: {filePath}");
+            Console.WriteLine($"File Size: {new FileInfo(filePath).Length} bytes");
+            Console.WriteLine($"Patient ID: {patientId}");
+            Console.WriteLine($"Hospital ID: {hospitalId}");
+            Console.WriteLine($"Doc Type: {docType}");
+            Console.WriteLine($"Base URL: {baseUrl}");
+
             //patient FHIR ID (what patient gets the document).
             string patientFhirId = GetIdFromSearch("Patient", new Dictionary<string, string> { { "identifier", patientId } });
+            Console.WriteLine($"Patient FHIR ID: {patientFhirId}");
+
             //hospital FHIR ID (what organization is uploading the document).
-            string hospitalFhirId = GetIdFromSearch("Organization", new Dictionary<string, string> { { "name", hospitalId },{ "type", "prov" } });
+            string hospitalFhirId = GetIdFromSearch("Organization", new Dictionary<string, string> { { "name", hospitalId }, { "type", "prov" },{ "active", "true" } });
+            Console.WriteLine($"Hospital FHIR ID: {hospitalFhirId}");
+
             //find the document type from ARIA
             var validDocTypes = GetValidDocumentTypes(hospitalFhirId);
+            Console.WriteLine($"Valid doc types count: {validDocTypes.Count}");
+
             string docCode = validDocTypes.FirstOrDefault(v => v.Value == docType).Key ?? "1"; // Use first valid type or fallback
+            Console.WriteLine($"Doc Code: {docCode}");
+
             string docCategory = "Patient Document"; // This can be adjusted based on your needs.
+            Console.WriteLine($"Doc Category: {docCategory}");
+
             var docRef = CreateDocumentReference(patientFhirId, filePath, docCode, docType, docCategory, hospitalFhirId);
 
             string response = PostDocumentReference(baseUrl, client, docRef);
+            Console.WriteLine($"=== InsertDocument Complete ===");
             //MessageBox.Show(response);
             return true;
 
@@ -172,7 +209,7 @@ namespace TreatmentPlanReport.Helpers
             }
             else
             {
-                throw new Exception($"Failed to create DocumentReference: {result}");
+                return $"Failed to create DocumentReference: {result}";
             }
         }
         private static Dictionary<string, string> GetValidDocumentTypes(string publisher)

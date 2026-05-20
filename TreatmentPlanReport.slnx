@@ -1,8 +1,6 @@
 <Solution>
-  <Project Path="../TreatmentPlanReport.Tests/TreatmentPlanReport.Tests.csproj" Id="a2e3f006-5ba1-4bf4-8ad2-ca0d135b2ded">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
+  <Project Path="../TreatmentPlanReport.Tests/TreatmentPlanReport.Tests.csproj" Id="a2e3f006-5ba1-4bf4-8ad2-ca0d135b2ded" />
   <Project Path="TreatmentPlanReport.csproj" Id="38206357-6d94-44a4-8b57-eddb9ff9e798">
-    <Build Solution="Debug|*" Project="false" />
+    <Platform Solution="Debug|*" Project="x64" />
   </Project>
 </Solution>

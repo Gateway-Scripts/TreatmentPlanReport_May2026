@@ -39,12 +39,12 @@ namespace TreatmentPlanReport
                 {
                     //open a patient course and plan, then launch the application.
                     //default for now.
-                    esapi.Patient patient = app.OpenPatientById("RapidPlan-01");
+                    esapi.Patient patient = app.OpenPatientById(_patientId);
                     //System.Diagnostics.Debugger.Break();
 //                    System.Threading.Thread.Sleep(3000);
 
-                    esapi.Course course = patient.Courses.FirstOrDefault(c => c.Id == "Demo");
-                    esapi.PlanSetup plan = course.PlanSetups.FirstOrDefault(p => p.Id == "IMRT Calc");
+                    esapi.Course course = patient.Courses.FirstOrDefault(c => c.Id == _courseId);
+                    esapi.PlanSetup plan = course.PlanSetups.FirstOrDefault(p => p.Id == _planId);
                     var mainView = new MainView();
                     var mainViewModel = new MainViewModel(patient,plan);
                     //tell the mainView to evaluate binding expressions using properties of the MainViewModel class.
